@@ -17,7 +17,7 @@ module.exports = function (config, cb) {
   var zip = new Adm_zip()
   var zip_name = path.join(config.dest, config.name + '.zip')
   try {
-    zip.addLocalFolder(config.source, '/')
+    zip.addLocalFolder(config.source, '')
     zip.writeZip(zip_name)
     cb(null, zip_name)
   } catch (e) {

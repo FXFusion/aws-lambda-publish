@@ -54,7 +54,7 @@ module.exports = function (source, opts, cb) {
         cb(err)
         return null
       }
-      cb(null, data)
+      cb(null, [opts.config, opts.manifest])
     })
   }
   async.parallel([

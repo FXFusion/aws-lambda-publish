@@ -98,7 +98,7 @@ Lambda_publisher.prototype.package = function (root, opts, cb) {
         }
       }
     ], function (err, data) {
-      package_lambda({ source: this.root, dest: this.opts.dest, name: this.opts.manifest.name }, function (err, data) {
+      package_lambda({ source: tmp_dir, dest: self.opts.dest, name: self.opts.manifest.name }, function (err, data) {
         if (err) {
           cb(err)
           return null
