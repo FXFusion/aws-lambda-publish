@@ -1,0 +1,56 @@
+{
+  "name": "aws-lambda-publish",
+  "version": "0.0.1",
+  "description": "npm module for building & publishing nodejs packages to AWS lambda",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "lint": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FXFusion/aws-lambda-publish.git"
+  },
+  "keywords": [
+    "npm",
+    "aws",
+    "lambda"
+  ],
+  "author": "Ryan McIlmoyl (ryan.mcilmoyl@fivewalls.com)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/FXFusion/aws-lambda-publish/issues"
+  },
+  "homepage": "https://github.com/FXFusion/aws-lambda-publish#readme",
+  "dependencies": {
+    "adm-zip": "^0.4.7",
+    "async": "^1.5.2",
+    "aws-sdk": "^2.2.32",
+    "chdir": "0.0.0",
+    "fs-extra": "^0.26.4",
+    "glob": "^6.0.4",
+    "lodash": "^4.0.1",
+    "standard": "^5.4.1",
+    "tmp": "0.0.28",
+    "yargs": "^3.32.0"
+  },
+  "devDependencies": {
+    "expect": "^1.13.4",
+    "mocha": "^2.4.2",
+    "mockery": "^1.4.0",
+    "simplesets": "^1.2.0",
+    "sinon": "^1.17.3",
+    "standard": "^5.4.1"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "context",
+      "it",
+      "before",
+      "after",
+      "beforeEach",
+      "afterEach"
+    ]
+  }
+}
