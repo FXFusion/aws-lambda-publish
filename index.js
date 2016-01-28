@@ -3,6 +3,7 @@ var fs = require('fs-extra')
 var _ = require('lodash')
 var parse_lambda_data = require('./parse_lambda_data')
 var package_lambda = require('./package_lambda')
+var publish_lambda = require('./publish_lambda')
 var copy_to_temp = require('./copy_to_temp')
 var async = require('async')
 var exec = require('child_process').exec
@@ -110,12 +111,13 @@ Lambda_publisher.prototype.package = function (root, opts, cb) {
 }
 
 Lambda_publisher.prototype.publish = function (root, opts, cb) {
-  this.package(root, opts, function (err, done) {
+  var self = this
+  this.package(root, opts, function (err, package) {
     if (err) {
       cb(err)
       return null
     }
-    done()
+    publish_lambda(package, self.opts.manifest, cb)
   })
 }
 
