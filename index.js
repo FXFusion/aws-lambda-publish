@@ -31,7 +31,7 @@ var Private = {
 }
 var Lambda_publisher = function () {}
 
-Lamda_publisher.prototype.package = function (root, opts, cb) {
+Lambda_publisher.prototype.package = function (root, opts, cb) {
   var self = this
   if (opts && typeof opts === 'function') {
     cb = opts

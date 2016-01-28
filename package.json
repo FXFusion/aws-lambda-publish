@@ -1,6 +1,6 @@
 {
   "name": "aws-lambda-publish",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "npm module for building & publishing nodejs packages to AWS lambda",
   "main": "index.js",
   "scripts": {
