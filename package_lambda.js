@@ -1,4 +1,3 @@
-var Adm_zip = require('adm-zip')
 var path = require('path')
 var exec = require('child_process').exec
 var chdir = require('chdir')
