@@ -22,7 +22,7 @@ describe('package_lambda', function () {
         try {
           var zip = new Adm_zip(path.join(self.source_folder, 'test_lambda.zip'))
           var entries = _.map(zip.getEntries(), function(entry) { return entry.entryName })
-          expect(entries).toInclude('/index.js')
+          expect(entries).toInclude('index.js')
           done()
         } catch (e) {
           done(e)
@@ -44,7 +44,7 @@ describe('package_lambda', function () {
         try {
           var zip = new Adm_zip(path.join(self.dest_folder, 'test_lambda.zip'))
           var entries = _.map(zip.getEntries(), function(entry) { return entry.entryName })
-          expect(entries).toInclude('/index.js')
+          expect(entries).toInclude('index.js')
           done()
         } catch (e) {
           done(e)
@@ -60,7 +60,7 @@ describe('package_lambda', function () {
           try {
             var zip = new Adm_zip(path.join(self.dest_folder, 'my_lambda.zip'))
             var entries = _.map(zip.getEntries(), function(entry) { return entry.entryName })
-            expect(entries).toInclude('/index.js')
+            expect(entries).toInclude('index.js')
             done()
           } catch (e) {
             done(e)
