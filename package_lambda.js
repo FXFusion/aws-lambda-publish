@@ -1,5 +1,7 @@
 var Adm_zip = require('adm-zip')
 var path = require('path')
+var exec = require('child_process').exec
+var chdir = require('chdir')
 module.exports = function (config, cb) {
   if (!config.source) {
     cb(new Error('Source folder not provided'))
@@ -14,13 +16,14 @@ module.exports = function (config, cb) {
   if (!config.name) {
     config.name = path.basename(config.source)
   }
-  var zip = new Adm_zip()
-  var zip_name = path.join(config.dest, config.name + '.zip')
-  try {
-    zip.addLocalFolder(config.source, '')
-    zip.writeZip(zip_name)
-    cb(null, zip_name)
-  } catch (e) {
-    cb(e)
-  }
+  chdir(config.source, function () {
+    var zip_name = path.join(config.dest, config.name + '.zip')
+    exec('zip -r ' + zip_name + ' ./', function(err, result) {
+      if (err) {
+        cb(err)
+        return null
+      }
+      cb(null, zip_name)
+    })
+  })
 }
