@@ -1,6 +1,6 @@
 {
   "name": "aws-lambda-publish",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "npm module for building & publishing nodejs packages to AWS lambda",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,7 @@
   "homepage": "https://github.com/FXFusion/aws-lambda-publish#readme",
   "dependencies": {
     "async": "^1.5.2",
-    "aws-sdk": "^2.2.32",
+    "aws-sdk": "^2.2.34",
     "chdir": "0.0.0",
     "fs-extra": "^0.26.4",
     "glob": "^6.0.4",
