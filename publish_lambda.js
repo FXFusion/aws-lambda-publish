@@ -36,7 +36,7 @@ var Private = {
       FunctionName: manifest.name,
       Handler: manifest.handler,
       Role: manifest.role,
-      Runtime: 'nodejs',
+      Runtime: 'nodejs4.3',
       Publish: true
     }
     if (manifest.description) {
@@ -47,6 +47,12 @@ var Private = {
     }
     if (manifest.timeout) {
       create_params.Timeout = manifest.timeout
+    }
+    if (manifest.vpc) {
+      create_params.VpcConfig = {
+        SecurityGroupIds: manifest.vpc.security_groups,
+        SubnetIds: manifest.vpc.subnet_ids
+      }
     }
     fs.readFile(zipfile, function (err, zip_file) {
       if (err) {
