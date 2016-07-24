@@ -21,18 +21,63 @@ var Private = {
   },
   parse_config: function (root_path, opts, cb) {
     var new_config = _.defaultsDeep({}, opts.config)
+    var configPath = path.join(root_path, opts.config_file)
+    var isConfigFolder = function () {
+      var isFolder = false
+      try {
+        var lstat = fs.lstatSync(configPath)
+        isFolder = lstat.isDirectory()
+      } catch (e) {
+        isFolder = false
+      }
+      return isFolder
+    }
+    var isConfigFile = function () {
+      var configFilePath = configPath + '.json'
+      var isFile = false
+      try {
+        isFile = fs.lstatSync(configFilePath).isFile()
+      } catch (_e) {
+        isFile = false
+      }
+      return isFile
+    }
     if (!opts.config_file) {
       cb(null, new_config)
       return null
     }
-    fs.readFile(path.join(root_path, opts.config_file), function (err, data) {
+    if (isConfigFolder()) {
+      Private.parseConfigFromFolder(configPath, opts, cb)
+    } else if (isConfigFile()) {
+      Private.parseConfigFromFile(configPath + '.json', opts, cb)
+    } else {
+      cb(null, new_config)
+      return null
+    }
+  },
+  parseConfigFromFile: function (configPath, opts, cb) {
+    var newConfig = _.defaultsDeep({}, opts.config)
+    fs.readFile(path.join(configPath), function (err, data) {
       if (err) {
-        cb(null, new_config)
+        cb(null, newConfig)
         return null
       }
-      var config_from_file = JSON.parse(data)
-      _.defaults(new_config, config_from_file)
-      cb(null, new_config)
+      var configFromFile = JSON.parse(data)
+      _.defaults(newConfig, configFromFile)
+      cb(null, newConfig)
+    })
+  },
+  parseConfigFromFolder: function (configPath, opts, cb) {
+    var newConfig = _.defaultsDeep({}, opts.config)
+    var configFilePath = path.join(configPath, opts.stage + '.json')
+    fs.readFile(configFilePath, function (err, data) {
+      if (err) {
+        cb(null, newConfig)
+        return null
+      }
+      var configFromFile = JSON.parse(data)
+      _.defaults(newConfig, configFromFile)
+      cb(null, newConfig)
     })
   },
   write_config: function (root_path, config, cb) {

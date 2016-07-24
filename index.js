@@ -26,7 +26,7 @@ var Private = {
     exclude: ['test', 'node_modules'],
     manifest_file: './function_manifest.json',
     manifest_options: {},
-    config_file: './config.json',
+    config_file: './config',
     config_options: {}
   }
 }
@@ -61,6 +61,7 @@ Lambda_publisher.prototype.package = function (root, opts, cb) {
   }
   if (opts.config_file) {
     copy_options.exclude.push(opts.config_file)
+    copy_options.exclude.push(opts.config_file + '.json')
   }
   copy_to_temp(this.root, copy_options, function (err, tmp_dir) {
     if (err) {
@@ -91,7 +92,7 @@ Lambda_publisher.prototype.package = function (root, opts, cb) {
           return null
         }
         if (package_json_stat.isFile()) {
-          exec('npm install --production', { cwd: tmp_dir}, function (err) {
+          exec('npm install --production', { cwd: tmp_dir }, function (err) {
             done(err)
           })
         } else {
@@ -99,6 +100,10 @@ Lambda_publisher.prototype.package = function (root, opts, cb) {
         }
       }
     ], function (err, data) {
+      if (err) {
+        cb(err)
+        return null
+      }
       package_lambda({ source: tmp_dir, dest: self.opts.dest, name: self.opts.manifest.name }, function (err, data) {
         if (err) {
           cb(err)
@@ -112,12 +117,12 @@ Lambda_publisher.prototype.package = function (root, opts, cb) {
 
 Lambda_publisher.prototype.publish = function (root, opts, cb) {
   var self = this
-  this.package(root, opts, function (err, package) {
+  this.package(root, opts, function (err, pack) {
     if (err) {
       cb(err)
       return null
     }
-    publish_lambda(package, self.opts.manifest, cb)
+    publish_lambda(pack, self.opts.manifest, cb)
   })
 }
 

@@ -1,18 +1,17 @@
 var mockery = require('mockery')
 var expect = require('expect')
-var sinon = require('sinon')
 var path = require('path')
 var tmp = require('tmp')
 describe('aws-lambda-publish', function () {
   var Publisher
   var mock_child_process = {
-    exec: function(command, options, cb) {
+    exec: function (command, options, cb) {
       cb(null)
     }
   }
   before(function () {
     mockery.enable()
-    mockery.registerAllowables(['../index', 'async', 'fs-extra', 'path', 'lodash', './copy_to_temp', './parse_lambda_data'])
+    mockery.warnOnUnregistered(false)
     mockery.registerMock('child_process', mock_child_process)
     Publisher = require('../index')
   })
