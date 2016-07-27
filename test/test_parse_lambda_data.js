@@ -88,7 +88,7 @@ describe('parse_lambda_data', function () {
     context('stage config does not exist', function () {
       beforeEach(function () {
         this.opts.stage = 'prod'
-        this.opts.config = { name: 'foobar'}
+        this.opts.config = { name: 'foobar' }
       })
       it('should write default config', function (done) {
         var self = this

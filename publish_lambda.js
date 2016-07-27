@@ -16,7 +16,7 @@ var Private = {
     }
   },
   lambda_exists: function (lambda_client, lambda_name, cb) {
-    lambda_client.getFunction({FunctionName: lambda_name }, function (err, data) {
+    lambda_client.getFunction({ FunctionName: lambda_name }, function (err, data) {
       if (err) {
         if (err.statusCode === 404) {
           cb(null, false)
@@ -77,7 +77,24 @@ var Private = {
     console.log('Updating function ' + manifest.name)
     var update_params = {
       FunctionName: manifest.name,
+      Handler: manifest.handler,
+      Role: manifest.role,
       Publish: true
+    }
+    if (manifest.description) {
+      update_params.Description = manifest.description
+    }
+    if (manifest.memory_size) {
+      update_params.MemorySize = manifest.memory_size
+    }
+    if (manifest.timeout) {
+      update_params.Timeout = manifest.timeout
+    }
+    if (manifest.vpc) {
+      update_params.VpcConfig = {
+        SecurityGroupIds: manifest.vpc.security_groups,
+        SubnetIds: manifest.vpc.subnet_ids
+      }
     }
     fs.readFile(zipfile, function (err, zip_file) {
       if (err) {
@@ -86,6 +103,10 @@ var Private = {
       }
       update_params.ZipFile = zip_file
       lambda_client.updateFunctionCode(update_params, function (err, data) {
+        if (err) {
+          cb(err)
+          return null
+        }
         if (manifest.stage) {
           Private.create_stage(lambda_client, manifest, data.Version, cb)
         } else {
@@ -124,7 +145,7 @@ module.exports = function (zip_file, manifest, cb) {
     return null
   }
   lambda_client = new aws.Lambda({ region: manifest.region })
-  Private.lambda_exists(lambda_client, manifest.name, function(err, exists) {
+  Private.lambda_exists(lambda_client, manifest.name, function (err, exists) {
     if (err) {
       cb(err)
       return null
