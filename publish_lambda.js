@@ -16,7 +16,7 @@ var Private = {
     }
   },
   lambda_exists: function (lambda_client, lambda_name, cb) {
-    lambda_client.getFunction({FunctionName: lambda_name }, function (err, data) {
+    lambda_client.getFunction({ FunctionName: lambda_name }, function (err, data) {
       if (err) {
         if (err.statusCode === 404) {
           cb(null, false)
@@ -86,6 +86,10 @@ var Private = {
       }
       update_params.ZipFile = zip_file
       lambda_client.updateFunctionCode(update_params, function (err, data) {
+        if (err) {
+          cb(err)
+          return null
+        }
         if (manifest.stage) {
           Private.create_stage(lambda_client, manifest, data.Version, cb)
         } else {
@@ -124,7 +128,7 @@ module.exports = function (zip_file, manifest, cb) {
     return null
   }
   lambda_client = new aws.Lambda({ region: manifest.region })
-  Private.lambda_exists(lambda_client, manifest.name, function(err, exists) {
+  Private.lambda_exists(lambda_client, manifest.name, function (err, exists) {
     if (err) {
       cb(err)
       return null
