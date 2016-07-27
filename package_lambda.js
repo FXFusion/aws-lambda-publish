@@ -17,7 +17,7 @@ module.exports = function (config, cb) {
   }
   chdir(config.source, function () {
     var zip_name = path.join(config.dest, config.name + '.zip')
-    exec('zip -r ' + zip_name + ' ./', function(err, result) {
+    exec('zip -r ' + zip_name + ' ./', { maxBuffer: 1024 * 500 }, function (err, result) {
       if (err) {
         cb(err)
         return null
