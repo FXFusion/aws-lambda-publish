@@ -1,5 +1,6 @@
 var aws = require('aws-sdk')
 var fs = require('fs')
+var async = require('async')
 var Private = {
   validate_manifest: function (manifest) {
     if (!manifest.region) {
@@ -77,21 +78,24 @@ var Private = {
     console.log('Updating function ' + manifest.name)
     var update_params = {
       FunctionName: manifest.name,
-      Handler: manifest.handler,
-      Role: manifest.role,
       Publish: true
     }
+    var update_manifest = {
+      FunctionName: manifest.name,
+      Handler: manifest.handler,
+      Role: manifest.role
+    }
     if (manifest.description) {
-      update_params.Description = manifest.description
+      update_manifest.Description = manifest.description
     }
     if (manifest.memory_size) {
-      update_params.MemorySize = manifest.memory_size
+      update_manifest.MemorySize = manifest.memory_size
     }
     if (manifest.timeout) {
-      update_params.Timeout = manifest.timeout
+      update_manifest.Timeout = manifest.timeout
     }
     if (manifest.vpc) {
-      update_params.VpcConfig = {
+      update_manifest.VpcConfig = {
         SecurityGroupIds: manifest.vpc.security_groups,
         SubnetIds: manifest.vpc.subnet_ids
       }
@@ -102,13 +106,21 @@ var Private = {
         return null
       }
       update_params.ZipFile = zip_file
-      lambda_client.updateFunctionCode(update_params, function (err, data) {
+      async.series([
+        function (done) {
+          lambda_client.updateFunctionCode(update_params, done)
+        },
+        function (done) {
+          lambda_client.updateFunctionConfiguration(update_manifest, done)
+        }
+      ],
+      function (err, data) {
         if (err) {
           cb(err)
           return null
         }
         if (manifest.stage) {
-          Private.create_stage(lambda_client, manifest, data.Version, cb)
+          Private.create_stage(lambda_client, manifest, data[1].Version, cb)
         } else {
           cb(null, data)
         }
