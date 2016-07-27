@@ -77,7 +77,24 @@ var Private = {
     console.log('Updating function ' + manifest.name)
     var update_params = {
       FunctionName: manifest.name,
+      Handler: manifest.handler,
+      Role: manifest.role,
       Publish: true
+    }
+    if (manifest.description) {
+      update_params.Description = manifest.description
+    }
+    if (manifest.memory_size) {
+      update_params.MemorySize = manifest.memory_size
+    }
+    if (manifest.timeout) {
+      update_params.Timeout = manifest.timeout
+    }
+    if (manifest.vpc) {
+      update_params.VpcConfig = {
+        SecurityGroupIds: manifest.vpc.security_groups,
+        SubnetIds: manifest.vpc.subnet_ids
+      }
     }
     fs.readFile(zipfile, function (err, zip_file) {
       if (err) {
